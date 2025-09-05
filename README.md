@@ -17,7 +17,7 @@ The goal is to provide a basic e-commerce style backend with authentication, pro
 * Docker (for containerization)
 * Redis & Kafka (to be added later)
 
----
+--
 
 ## What’s Inside
 
