@@ -1,0 +1,64 @@
+name: CI/CD Deploy
+
+on:
+  push:
+    branches:
+      - main   # run only when pushing to main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      # Login to AWS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Login to Amazon ECR
+        run: |
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin 573051981280.dkr.ecr.ap-south-1.amazonaws.com
+
+      # Build & Push each service image (example: product-service)
+      - name: Build and Push product-service
+        run: |
+          docker build -t product-service ./product-service
+          docker tag product-service:latest 573051981280.dkr.ecr.ap-south-1.amazonaws.com/product-service:latest
+          docker push 573051981280.dkr.ecr.ap-south-1.amazonaws.com/product-service:latest
+
+      - name: Build and Push order-service
+        run: |
+          docker build -t order-service ./order-service
+          docker tag order-service:latest 573051981280.dkr.ecr.ap-south-1.amazonaws.com/order-service:latest
+          docker push 573051981280.dkr.ecr.ap-south-1.amazonaws.com/order-service:latest
+
+      - name: Build and Push eureka-server
+        run: |
+          docker build -t eureka-server ./eureka-server
+          docker tag eureka-server:latest 573051981280.dkr.ecr.ap-south-1.amazonaws.com/eureka-server:latest
+          docker push 573051981280.dkr.ecr.ap-south-1.amazonaws.com/eureka-server:latest
+
+      - name: Build and Push api-gateway
+        run: |
+          docker build -t api-gateway ./api-gateway
+          docker tag api-gateway:latest 573051981280.dkr.ecr.ap-south-1.amazonaws.com/api-gateway:latest
+          docker push 573051981280.dkr.ecr.ap-south-1.amazonaws.com/api-gateway:latest
+
+      # Deploy to EC2
+      - name: Deploy on EC2
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd ~/springboot-ecommerce
+            git pull origin main
+            docker-compose pull
+            docker-compose up -d --remove-orphans
