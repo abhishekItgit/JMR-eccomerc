@@ -34,7 +34,7 @@ The goal is to provide a basic e-commerce style backend with authentication, pro
 1. Clone the repo:
 
    ```bash
-   git clone https://github.com/your-username/springboot-ecommerce.git
+   git clone https://github.com/your-username/JMR-eccomerc.git
    cd springboot-ecommerce
    ```
 
