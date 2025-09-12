@@ -38,8 +38,8 @@ services:
       - mysql
       - eureka-server
     environment:
-      - DB_USERNAME=${{ secrets.DB_USERNAME }}
-      - MYSQLPASS=${{ secrets.MYSQLPASS }}
+      - DB_USERNAME=${ secrets.DB_USERNAME }
+      - MYSQLPASS=${ secrets.MYSQLPASS }
       - EUREKA_HOST=eureka-server
     networks:
       - microservices-net
@@ -50,8 +50,8 @@ services:
     ports:
       - "8083:8083"
     environment:
-      - DB_USERNAME=${{ secrets.DB_USERNAME }}
-      - MYSQLPASS=${{ secrets.MYSQLPASS }}
+      - DB_USERNAME=${ secrets.DB_USERNAME }
+      - MYSQLPASS=${ secrets.MYSQLPASS }
       - EUREKA_HOST=eureka-server
     depends_on:
       - eureka-server
@@ -64,8 +64,8 @@ services:
     image: mysql:8
     container_name: mysql
     environment:
-      - DB_USERNAME=${{ secrets.DB_USERNAME }}
-      - MYSQLPASS=${{ secrets.MYSQLPASS }}
+      - DB_USERNAME=${ secrets.DB_USERNAME }
+      - MYSQLPASS=${ secrets.MYSQLPASS }
       - EUREKA_HOST=eureka-server
     ports:
       - "3306:3306"
