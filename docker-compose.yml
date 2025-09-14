@@ -43,7 +43,7 @@ services:
       - microservices-net
 
   order-service:
-    image: 573051981280.dkr.ecr.ap-south-1.amazonaws.com/product-service:latest
+    image: 573051981280.dkr.ecr.ap-south-1.amazonaws.com/order-service:latest
     container_name: order-service
     ports:
       - "8083:8080"
