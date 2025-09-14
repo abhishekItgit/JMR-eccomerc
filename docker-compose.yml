@@ -15,6 +15,18 @@ services:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
 
 
+  api-gateway:
+    image: 573051981280.dkr.ecr.ap-south-1.amazonaws.com/api-gateway:latest
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      - eureka-server
+    networks:
+      - microservices-net
+
+
+
   product-service:
     image: 573051981280.dkr.ecr.ap-south-1.amazonaws.com/product-service:latest
     container_name: product-service
