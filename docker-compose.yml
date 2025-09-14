@@ -14,18 +14,6 @@ services:
       EUREKA_CLIENT_FETCH_REGISTRY: "false"
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
 
-  mysql:
-    image: mysql:8
-    container_name: mysql
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: product_db
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: apppass
-    ports:
-      - "3306:3306"
-    networks:
-      - microservices-net
 
   product-service:
     image: 573051981280.dkr.ecr.ap-south-1.amazonaws.com/product-service:latest
@@ -33,7 +21,6 @@ services:
     ports:
       - "8082:8080"
     depends_on:
-      - mysql
       - eureka-server
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/product_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
