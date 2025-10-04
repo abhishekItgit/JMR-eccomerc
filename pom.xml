@@ -21,6 +21,7 @@
 		<module>order-service</module>
         <module>eureka-server</module>
         <module>api-gateway</module>
+        <module>auth-service</module>
 	</modules>
 
 	<dependencyManagement>
