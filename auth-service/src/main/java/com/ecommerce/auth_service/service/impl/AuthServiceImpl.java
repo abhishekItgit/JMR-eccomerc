@@ -50,7 +50,7 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
         }
 
-        String token = jwtUtil.generateToken(u.getEmail(), u.getRoles());
+        String token = "Bearer " + jwtUtil.generateToken(u.getEmail(), u.getRoles());
         return new AuthResponse(token, "Login successful");
     }
 }
