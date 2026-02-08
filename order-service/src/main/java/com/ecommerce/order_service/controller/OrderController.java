@@ -1,27 +1,41 @@
 package com.ecommerce.order_service.controller;
 
-import com.ecommerce.order_service.dto.OrderDto;
-import com.ecommerce.order_service.service.IOrderService;
-import lombok.RequiredArgsConstructor;
+import com.ecommerce.order_service.dto.CheckoutRequest;
+import com.ecommerce.order_service.dto.OrderResponse;
+import com.ecommerce.order_service.service.EcommerceOrderService;
+import java.util.List;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/orders")
-@RequiredArgsConstructor
+@RequestMapping("/orders")
 public class OrderController {
 
-    private final IOrderService orderService;  // ✅ interface, not implementation
+    private final EcommerceOrderService orderService;
 
-    @PostMapping("/save")
-    public ResponseEntity<OrderDto> createOrder(@RequestBody OrderDto dto) {
-        return ResponseEntity.ok(orderService.createOrder(dto));
+    public OrderController(EcommerceOrderService orderService) {
+        this.orderService = orderService;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<OrderDto> getOrder(@PathVariable Long id) {
-        return ResponseEntity.ok(orderService.getOrder(id));
+    @PostMapping("/checkout")
+    public ResponseEntity<OrderResponse> checkout(@RequestBody CheckoutRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.checkout(request));
+    }
+
+    @GetMapping("/{orderId}")
+    public ResponseEntity<OrderResponse> getOrder(@PathVariable Long orderId) {
+        return ResponseEntity.ok(orderService.getOrder(orderId));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<OrderResponse>> listOrders(@RequestParam Long customerId) {
+        return ResponseEntity.ok(orderService.getOrdersForCustomer(customerId));
     }
 }
